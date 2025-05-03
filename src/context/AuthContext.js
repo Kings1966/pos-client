@@ -6,28 +6,34 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(undefined); // undefined = loading, null = not logged in
 
-  // Check if user is logged in on mount
+  const checkAuth = async () => {
+    try {
+      // Delay to ensure session is available
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      const res = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/users/profile`, {
+        withCredentials: true,
+      });
+      console.log('checkAuth - Success:', { user: res.data });
+      setUser(res.data);
+    } catch (err) {
+      console.error('checkAuth - Failed:', {
+        message: err.message,
+        status: err.response?.status,
+        data: err.response?.data,
+        headers: err.response?.headers,
+      });
+      setUser(null);
+    }
+  };
+
   useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const res = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/users/profile`, {
-          withCredentials: true,
-        });
-        setUser(res.data); // Set user data from /profile
-      } catch (err) {
-        console.error('Auth check failed:', {
-          message: err.message,
-          status: err.response?.status,
-          data: err.response?.data,
-        });
-        setUser(null); // Not logged in
-      }
-    };
     checkAuth();
   }, []);
 
-  const login = (userData) => {
+  const login = async (userData) => {
     setUser(userData);
+    // Re-check auth to ensure session is valid
+    await checkAuth();
   };
 
   const logout = async () => {

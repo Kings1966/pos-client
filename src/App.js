@@ -1,5 +1,4 @@
-// client/src/App.js
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { Provider, useDispatch } from 'react-redux';
 import { store } from './redux/store';
@@ -12,26 +11,28 @@ import './App.css';
 import Sidebar from './components/Sidebar/Sidebar';
 import Topbar from './components/Topbar/Topbar';
 import LoginPage from './components/Auth/LoginPage';
-import PosInterface from './components/PosInterface/PosInterface';
-import SalesManager from './components/SalesManager/SalesManager';
-import UserProfile from './components/User/UserProfile';
-import SavedSales from './components/SalesManager/SavedSales';
-import QuoteInvoiceManager from './components/Documents/QuoteInvoiceManager';
-import RefundHistory from './components/Refunds/RefundHistory';
-import RefundProcess from './components/Refunds/RefundProcess';
-import Dashboard from './components/Dashboard/Dashboard';
-import ProductManager from './components/ProductManager/ProductManager';
-import StockManagement from './components/StockManagement/StockManagement';
-import Customers from './components/Customers/Customers';
-import Suppliers from './components/SupplierManagement/Suppliers';
-import Accounting from './components/Accounting/Accounting';
-import Reports from './components/Reports/Reports';
-import Settings from './components/Settings/Settings';
-import ReceiptFormat from './components/Settings/ReceiptFormat';
-import DocumentFormat from './components/Settings/DocumentFormat';
-import TaxRates from './components/Settings/TaxRates';
-import Backup from './components/Settings/Backup';
-import Users from './components/Settings/Users';
+
+// Lazy-load components
+const PosInterface = lazy(() => import('./components/PosInterface/PosInterface'));
+const SalesManager = lazy(() => import('./components/SalesManager/SalesManager'));
+const UserProfile = lazy(() => import('./components/User/UserProfile'));
+const SavedSales = lazy(() => import('./components/SalesManager/SavedSales'));
+const QuoteInvoiceManager = lazy(() => import('./components/Documents/QuoteInvoiceManager'));
+const RefundHistory = lazy(() => import('./components/Refunds/RefundHistory'));
+const RefundProcess = lazy(() => import('./components/Refunds/RefundProcess'));
+const Dashboard = lazy(() => import('./components/Dashboard/Dashboard'));
+const ProductManager = lazy(() => import('./components/ProductManager/ProductManager'));
+const StockManagement = lazy(() => import('./components/StockManagement/StockManagement'));
+const Customers = lazy(() => import('./components/Customers/Customers'));
+const Suppliers = lazy(() => import('./components/SupplierManagement/Suppliers'));
+const Accounting = lazy(() => import('./components/Accounting/Accounting'));
+const Reports = lazy(() => import('./components/Reports/Reports'));
+const Settings = lazy(() => import('./components/Settings/Settings'));
+const ReceiptFormat = lazy(() => import('./components/Settings/ReceiptFormat'));
+const DocumentFormat = lazy(() => import('./components/Settings/DocumentFormat'));
+const TaxRates = lazy(() => import('./components/Settings/TaxRates'));
+const Backup = lazy(() => import('./components/Settings/Backup'));
+const Users = lazy(() => import('./components/Settings/Users'));
 
 const socket = io(process.env.REACT_APP_BACKEND_URL || 'https://pos-backend-7gom.onrender.com', {
   transports: ['websocket'],
@@ -42,6 +43,7 @@ const AppLayout = ({ children }) => {
   const dispatch = useDispatch();
   const location = useLocation();
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [allProducts, setAllProducts] = useState([]);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -129,10 +131,12 @@ const AppLayout = ({ children }) => {
         let errorMessage = err.message;
         if (err.response) {
           if (err.response.status === 401 || err.response.status === 403) {
-            console.log('Authentication failed, redirecting to login...');
-            navigate('/login');
-            setLoading(false);
-            return;
+            console.log('Authentication failed, will retry...');
+            if (attempt === retries) {
+              console.log('Max retries reached, redirecting to login...');
+              navigate('/login');
+              setLoading(false);
+            }
           } else if (err.response.status === 404) {
             errorMessage = 'Products endpoint not found. Please check the backend server.';
           } else if (err.response.status === 500) {
@@ -157,7 +161,15 @@ const AppLayout = ({ children }) => {
   };
 
   useEffect(() => {
-    fetchProducts();
+    // Only fetch products if user is authenticated
+    if (user) {
+      const timer = setTimeout(() => {
+        fetchProducts();
+      }, 1000); // Delay to ensure session is set
+      return () => clearTimeout(timer);
+    } else {
+      setLoading(false); // Skip fetch if not logged in
+    }
 
     socket.on('stockUpdated', (updatedProduct) => {
       setProducts((prev) =>
@@ -181,7 +193,7 @@ const AppLayout = ({ children }) => {
       socket.off('stockUpdated');
       socket.off('productUpdated');
     };
-  }, []);
+  }, [user]);
 
   const addToCart = (product) => {
     dispatch({ type: 'cart/addToCart', payload: product });
@@ -207,12 +219,14 @@ const AppLayout = ({ children }) => {
               minWidth: '400px',
             }}
           >
-            {React.cloneElement(children, {
-              allProducts,
-              setAllProducts,
-              categories,
-              setCategories,
-            })}
+            <Suspense fallback={<div>Loading component...</div>}>
+              {React.cloneElement(children, {
+                allProducts,
+                setAllProducts,
+                categories,
+                setCategories,
+              })}
+            </Suspense>
           </div>
         </div>
       </div>
@@ -439,7 +453,7 @@ const AppRoutes = () => (
 const App = () => (
   <Provider store={store}>
     <AuthProvider>
-      <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <Router>
         <div className="App">
           <AppRoutes />
         </div>

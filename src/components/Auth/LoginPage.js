@@ -4,7 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import styled, { keyframes } from 'styled-components';
 
-// Animations (unchanged, kept for brevity)
+// Animations
 const letterFadeIn = keyframes`
   0% { opacity: 0; transform: translateY(20px); }
   100% { opacity: 1; transform: translateY(0); }
@@ -25,7 +25,7 @@ const lightRays = keyframes`
   100% { transform: rotate(360deg); opacity: 0.2; }
 `;
 
-// Styled Components (unchanged, kept for brevity)
+// Styled Components
 const LoginContainer = styled.div`
   display: flex;
   height: 100vh;
@@ -189,7 +189,7 @@ const LoginPage = () => {
       console.log('Login response:', res.data);
       console.log('Response headers:', res.headers);
       const user = res.data.user;
-      login(user);
+      await login(user); // Wait for login to complete
       navigate('/');
     } catch (err) {
       console.error('Login failed:', {
