@@ -1,0 +1,157 @@
+.stock-management {
+  background: linear-gradient(90deg, #4169E1 0%, #6A0DAD 100%);
+  min-height: calc(100vh - 112px);
+  padding: 1.5rem;
+  font-family: 'Playfair Display', serif;
+  color: #FFF8E7;
+}
+
+.section-title {
+  font-family: 'Cinzel', serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #FFD700;
+  text-shadow: 0 0 2px rgba(255, 215, 0, 0.3);
+  margin-bottom: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.section-subtitle {
+  font-family: 'Cinzel', serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #FFD700;
+  margin-bottom: 1rem;
+}
+
+.stock-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr 2fr;
+  gap: 1.5rem;
+}
+
+.bulk-stock-section,
+.sale-section,
+.stock-table-section {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(5px);
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 1px solid #FFD700;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  display: block;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.form-group input,
+.form-group select {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid #FFD700;
+  border-radius: 6px;
+  padding: 0.75rem;
+  color: #FFF8E7;
+  font-family: 'Playfair Display', serif;
+  width: 100%;
+  box-sizing: border-box;
+  transition: box-shadow 0.3s;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  outline: none;
+  box-shadow: 0 0 8px rgba(255, 215, 0, 0.5);
+  border-color: #FFF8E7;
+}
+
+button {
+  cursor: pointer;
+  font-family: 'Cinzel', serif;
+  font-weight: 600;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  background: #FFD700;
+  color: #4B0082;
+  border: 1px solid #FFD700;
+  transition: background 0.3s, box-shadow 0.3s;
+}
+
+button:hover {
+  background: #FFF8E7;
+  box-shadow: 0 0 8px rgba(255, 215, 0, 0.5);
+}
+
+button:disabled {
+  background: rgba(255, 255, 255, 0.2);
+  color: #FFF8E7;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.stock-table-container {
+  overflow-x: auto;
+}
+
+.stock-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.stock-table th,
+.stock-table td {
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid rgba(255, 215, 0, 0.3);
+}
+
+.stock-table th {
+  background: rgba(255, 215, 0, 0.2);
+  color: #FFD700;
+  font-family: 'Cinzel', serif;
+  font-weight: 600;
+  position: sticky;
+  top: 0;
+}
+
+.stock-table td {
+  color: #FFF8E7;
+}
+
+.stock-table tr:hover {
+  background: rgba(255, 215, 0, 0.1);
+}
+
+.stock-table tr.low-stock {
+  background: rgba(255, 0, 0, 0.2);
+}
+
+.notice-board {
+  margin-top: 1rem;
+}
+
+.notice-board-actions {
+  margin-top: 1rem;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.stock-chart {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 1rem;
+  border-radius: 12px;
+  max-height: 300px;
+}
+
+@media (max-width: 768px) {
+  .stock-container {
+    grid-template-columns: 1fr;
+  }
+}

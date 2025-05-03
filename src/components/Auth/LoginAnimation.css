@@ -1,0 +1,119 @@
+/* client/src/components/Auth/LoginAnimation.css */
+
+.login-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, royalblue, indigo);
+    overflow: hidden;
+    position: relative;
+  }
+  
+  .logo-wrapper {
+    position: relative;
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  
+  #crown {
+    transform-origin: center;
+  }
+  
+  .logo-text {
+    font-size: 3rem;
+    font-weight: bold;
+    color: gold;
+    text-shadow: 0 0 15px gold, 0 0 30px goldenrod;
+    margin-top: 10px;
+  }
+  
+  .golden-mist {
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(255,223,0,0.2) 0%, transparent 70%);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation: mistFlow 10s infinite linear alternate;
+    z-index: 0;
+  }
+  
+  @keyframes mistFlow {
+    0% {
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 0.2;
+    }
+    50% {
+      transform: translate(-48%, -52%) scale(1.2);
+      opacity: 0.4;
+    }
+    100% {
+      transform: translate(-52%, -48%) scale(1);
+      opacity: 0.2;
+    }
+  }
+  
+  .light-rays {
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, gold 0%, transparent 70%);
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0);
+    z-index: 0;
+    pointer-events: none;
+  }
+  
+  .login-form {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 0 15px gold;
+    width: 300px;
+    z-index: 1;
+  }
+  
+  .login-form input {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .login-form button {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(90deg, gold, goldenrod);
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    color: white;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  
+  .login-form button:hover {
+    background: linear-gradient(90deg, goldenrod, gold);
+  }
+  
+  .error-message {
+    color: red;
+    margin-bottom: 1rem;
+  }
+  
+  @keyframes burst {
+    0% {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(0.5);
+    }
+    100% {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(3);
+    }
+  }
+  

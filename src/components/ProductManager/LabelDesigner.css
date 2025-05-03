@@ -1,0 +1,170 @@
+.label-designer {
+  margin-top: 20px;
+  font-family: 'Times New Roman', serif;
+}
+
+.label-designer h4 {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+  color: #ffd700;
+  text-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
+}
+
+.label-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 15px;
+  background: #f9f9f9;
+  padding: 10px;
+  border-radius: 4px;
+}
+
+.label-controls select,
+.label-controls input,
+.label-controls button,
+.label-controls textarea {
+  padding: 8px;
+  border: 1px solid #ffd700;
+  border-radius: 4px;
+  background: #ffffff;
+  color: #2c3e50;
+}
+
+.label-controls select:focus,
+.label-controls input:focus,
+.label-controls textarea:focus {
+  outline: none;
+  border-color: #ffeb3b;
+  box-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
+}
+
+.label-controls button {
+  background: #ffd700;
+  color: #2c3e50;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.label-controls button:hover {
+  background: #ffeb3b;
+}
+
+.label-controls button:disabled {
+  background: #cccccc;
+  cursor: not-allowed;
+}
+
+.label-controls label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #2c3e50;
+}
+
+.label-preview {
+  position: relative;
+  background: #fff;
+  border: 1px solid #ffd700;
+  overflow: hidden;
+  max-width: 1200px;
+}
+
+.empty-preview {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #888;
+  font-size: 16px;
+}
+
+.label-element {
+  position: absolute;
+  border: 1px dashed #ffd700;
+  cursor: grab;
+  user-select: none;
+  overflow: hidden;
+  z-index: 10;
+}
+
+.label-element:active {
+  cursor: grabbing;
+}
+
+.label-element img,
+.label-element svg {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.label-element span,
+.label-element textarea {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.drag-handle {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  cursor: grab;
+  z-index: 12; /* Below textarea and buttons */
+}
+
+.resize-handle {
+  position: absolute;
+  bottom: -5px;
+  right: -5px;
+  width: 10px;
+  height: 10px;
+  background: #ffd700;
+  border: 1px solid #2c3e50;
+  cursor: nwse-resize;
+  z-index: 15;
+}
+
+.rotate-handle {
+  position: absolute;
+  top: -15px;
+  right: -5px;
+  width: 10px;
+  height: 10px;
+  background: #ffeb3b;
+  border: 1px solid #2c3e50;
+  cursor: pointer;
+  border-radius: 50%;
+  z-index: 15;
+}
+
+.delete-button {
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  width: 20px;
+  height: 20px;
+  background: #ff0000;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  z-index: 15;
+}
+
+.form-group .label-designer-container {
+  max-height: 600px;
+  overflow-y: auto;
+}

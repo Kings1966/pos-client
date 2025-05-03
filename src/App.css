@@ -1,0 +1,33 @@
+/* src/App.css */
+.App {
+  width: 100%;
+  min-height: 100vh;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Main layout container */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Container for Sidebar and content */
+.app-main {
+  display: flex;
+  flex: 1;
+  width: 100%;
+}
+
+/* Content area */
+.app-content {
+  flex: 1;
+  overflow-y: auto;
+  min-height: calc(100vh - 112px); /* Account for Topbar height */
+  transition: margin-left 0.3s, width 0.3s;
+  background: transparent; /* Let POSInterface handle background */
+}
