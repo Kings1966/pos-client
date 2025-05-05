@@ -189,7 +189,7 @@ const LoginPage = () => {
       console.log('Login response:', res.data);
       console.log('Response headers:', res.headers);
       const user = res.data.user;
-      await login(user); // Wait for login to complete
+      await login(user);
       navigate('/');
     } catch (err) {
       console.error('Login failed:', {
@@ -198,7 +198,13 @@ const LoginPage = () => {
         data: err.response?.data,
         headers: err.response?.headers,
       });
-      setError(err.response?.data?.message || 'Invalid email or password');
+      if (err.response?.status === 401) {
+        setError('Invalid email or password');
+      } else if (err.code === 'ERR_NETWORK') {
+        setError('Network error: Backend server is unreachable');
+      } else {
+        setError(err.response?.data?.message || 'An error occurred during login');
+      }
     }
   };
 

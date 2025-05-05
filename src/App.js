@@ -37,6 +37,9 @@ const Users = lazy(() => import('./components/Settings/Users'));
 const socket = io(process.env.REACT_APP_BACKEND_URL || 'https://pos-backend-7gom.onrender.com', {
   transports: ['websocket'],
   withCredentials: true,
+  reconnection: true,
+  reconnectionAttempts: 5,
+  reconnectionDelay: 1000,
 });
 
 const AppLayout = ({ children }) => {
@@ -171,6 +174,12 @@ const AppLayout = ({ children }) => {
       setLoading(false); // Skip fetch if not logged in
     }
 
+    socket.on('connect', () => {
+      console.log('Socket.IO connected:', socket.id);
+    });
+    socket.on('connect_error', (err) => {
+      console.error('Socket.IO connection error:', err.message);
+    });
     socket.on('stockUpdated', (updatedProduct) => {
       setProducts((prev) =>
         prev.map((p) => (p._id === updatedProduct._id ? updatedProduct : p))
@@ -179,7 +188,6 @@ const AppLayout = ({ children }) => {
         prev.map((p) => (p._id === updatedProduct._id ? updatedProduct : p))
       );
     });
-
     socket.on('productUpdated', (updatedProduct) => {
       setProducts((prev) =>
         prev.map((p) => (p._id === updatedProduct._id ? updatedProduct : p))
@@ -190,6 +198,8 @@ const AppLayout = ({ children }) => {
     });
 
     return () => {
+      socket.off('connect');
+      socket.off('connect_error');
       socket.off('stockUpdated');
       socket.off('productUpdated');
     };
