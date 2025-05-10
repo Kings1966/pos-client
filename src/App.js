@@ -34,7 +34,7 @@ const TaxRates = lazy(() => import('./components/Settings/TaxRates'));
 const Backup = lazy(() => import('./components/Settings/Backup'));
 const Users = lazy(() => import('./components/Settings/Users'));
 
-const socket = io(process.env.REACT_APP_BACKEND_URL || 'https://pos-backend-7gom.onrender.com', {
+const socket = io(process.env.REACT_APP_BACKEND_URL, {
   transports: ['websocket'],
   withCredentials: true,
   reconnection: true,
@@ -164,21 +164,23 @@ const AppLayout = ({ children }) => {
   };
 
   useEffect(() => {
-    // Only fetch products if user is authenticated
     if (user) {
       const timer = setTimeout(() => {
         fetchProducts();
-      }, 1000); // Delay to ensure session is set
+      }, 1000);
       return () => clearTimeout(timer);
     } else {
-      setLoading(false); // Skip fetch if not logged in
+      setLoading(false);
     }
 
     socket.on('connect', () => {
       console.log('Socket.IO connected:', socket.id);
     });
     socket.on('connect_error', (err) => {
-      console.error('Socket.IO connection error:', err.message);
+      console.error('Socket.IO connection error:', {
+        message: err.message,
+        cause: err.cause,
+      });
     });
     socket.on('stockUpdated', (updatedProduct) => {
       setProducts((prev) =>

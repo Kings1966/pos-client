@@ -6,16 +6,19 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(undefined); // undefined = loading, null = not logged in
 
-  const checkAuth = async (retries = 3, delay = 1000) => {
+  const checkAuth = async (retries = 5, delay = 2000) => {
     for (let attempt = 1; attempt <= retries; attempt++) {
-      console.log(`checkAuth - Attempt ${attempt}`);
+      console.log(`checkAuth - Attempt ${attempt}`, { backendUrl: process.env.REACT_APP_BACKEND_URL });
       try {
-        // Delay to ensure session is available
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+        await new Promise((resolve) => setTimeout(resolve, delay));
         const res = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/users/profile`, {
           withCredentials: true,
         });
-        console.log('checkAuth - Success:', { user: res.data });
+        console.log('checkAuth - Success:', {
+          user: res.data,
+          headers: res.headers,
+          cookies: res.config.headers.Cookie || 'No cookies sent',
+        });
         setUser(res.data);
         return true;
       } catch (err) {
@@ -24,12 +27,13 @@ export const AuthProvider = ({ children }) => {
           status: err.response?.status,
           data: err.response?.data,
           headers: err.response?.headers,
+          cookies: err.config?.headers?.Cookie || 'No cookies sent',
+          code: err.code,
         });
         if (attempt === retries) {
           setUser(null);
           return false;
         }
-        await new Promise((resolve) => setTimeout(resolve, delay));
       }
     }
   };
@@ -40,7 +44,6 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (userData) => {
     setUser(userData);
-    // Re-check auth to ensure session is valid
     const success = await checkAuth();
     if (!success) {
       setUser(null);
@@ -59,7 +62,11 @@ export const AuthProvider = ({ children }) => {
       );
       setUser(null);
     } catch (err) {
-      console.error('Logout failed:', err);
+      console.error('Logout failed:', {
+        message: err.message,
+        status: err.response?.status,
+        data: err.response?.data,
+      });
     }
   };
 

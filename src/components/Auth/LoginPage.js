@@ -181,13 +181,20 @@ const LoginPage = () => {
     setError('');
     try {
       const { email, password } = formData;
+      console.log('Attempting login...', {
+        email,
+        backendUrl: process.env.REACT_APP_BACKEND_URL,
+      });
       const res = await axios.post(
         `${process.env.REACT_APP_BACKEND_URL}/api/users/login`,
         { email, password },
         { withCredentials: true }
       );
-      console.log('Login response:', res.data);
-      console.log('Response headers:', res.headers);
+      console.log('Login response:', {
+        data: res.data,
+        headers: res.headers,
+        cookies: res.config.headers.Cookie || 'No cookies sent',
+      });
       const user = res.data.user;
       await login(user);
       navigate('/');
@@ -197,11 +204,13 @@ const LoginPage = () => {
         status: err.response?.status,
         data: err.response?.data,
         headers: err.response?.headers,
+        cookies: err.config?.headers?.Cookie || 'No cookies sent',
+        code: err.code,
       });
       if (err.response?.status === 401) {
         setError('Invalid email or password');
       } else if (err.code === 'ERR_NETWORK') {
-        setError('Network error: Backend server is unreachable');
+        setError('Network error: Backend server is unreachable. Please check the server status.');
       } else {
         setError(err.response?.data?.message || 'An error occurred during login');
       }
